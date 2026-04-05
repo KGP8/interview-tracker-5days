@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5-Day Interview Prep Tracker — mrkgp</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a0d;
+  --surface: #0d1419;
+  --surface2: #131b22;
+  --surface3: #192330;
+  --border: #1c2830;
+  --border-bright: #243040;
+  --accent: #1fd4a0;
+  --accent-dim: rgba(31,212,160,0.1);
+  --accent-glow: rgba(31,212,160,0.18);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.1);
+  --red: #f4505e;
+  --red-dim: rgba(244,80,94,0.1);
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.1);
+  --text: #d8e4f0;
+  --text-dim: #7a95aa;
+  --text-muted: #3d5568;
+  --r: 2px;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --display: 'Syne', sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  min-height: 100vh;
+  padding: 28px 16px 60px;
+}
+
+/* GRID LINES BG */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(31,212,160,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,212,160,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ HEADER ═══ */
+.header { margin-bottom: 28px; }
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-family: var(--display);
+  font-size: clamp(18px, 4vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.title-tag {
+  display: inline-block;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--amber-dim);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: var(--r);
+  padding: 5px 12px;
+  font-size: 11px;
+  color: var(--amber);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  padding: 5px 12px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  transition: all 0.15s;
+}
+.btn-reset:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-dim);
+}
+
+/* OVERALL PROGRESS */
+.overall-progress {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  margin-bottom: 8px;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
+
+.progress-stats {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.overall-pct {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.progress-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.progress-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #4ade80);
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 2px;
+  height: 9px;
+  background: #fff;
+  border-radius: 1px;
+  opacity: 0.7;
+}
+
+/* QUOTE BAR */
+.quote-bar {
+  background: var(--accent-dim);
+  border: 1px solid rgba(31,212,160,0.12);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  color: var(--accent);
+  font-size: 11.5px;
+  font-style: italic;
+  margin-bottom: 28px;
+  opacity: 0.85;
+}
+
+/* ═══ SECTION HEADER ═══ */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.section-header-text {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ═══ FOCUS PANEL ═══ */
+.focus-panel {
+  background: var(--surface);
+  border: 1px solid rgba(245,158,11,0.15);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  margin-bottom: 28px;
+}
+
+.focus-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.focus-day-tag {
+  background: var(--amber-dim);
+  border: 1px solid rgba(245,158,11,0.2);
+  color: var(--amber);
+  padding: 1px 7px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-family: var(--mono);
+}
+
+.focus-items { display: flex; flex-direction: column; gap: 7px; }
+
+.focus-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.priority-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--amber);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 2px;
+  padding: 1px 6px;
+  min-width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ═══ DAY CARDS ═══ */
+.days-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+
+.day-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color 0.2s;
+  opacity: 0;
+  animation: slideIn 0.35s ease forwards;
+}
+
+.day-card:nth-child(1){animation-delay:0.04s}
+.day-card:nth-child(2){animation-delay:0.09s}
+.day-card:nth-child(3){animation-delay:0.14s}
+.day-card:nth-child(4){animation-delay:0.19s}
+.day-card:nth-child(5){animation-delay:0.24s}
+
+@keyframes slideIn {
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.day-card:hover { border-color: var(--border-bright); }
+.day-card.is-active { border-color: rgba(31,212,160,0.25); }
+.day-card.is-done { border-color: rgba(34,197,94,0.2); }
+
+.day-header {
+  display: flex;
+  align-items: center;
+  padding: 13px 16px;
+  cursor: pointer;
+  gap: 10px;
+  user-select: none;
+  transition: background 0.15s;
+}
+.day-header:hover { background: var(--surface2); }
+
+.pulse {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.35;transform:scale(0.8)}
+}
+
+.day-num {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  min-width: 46px;
+  color: #fff;
+}
+
+.day-theme {
+  color: var(--text-dim);
+  font-size: 11px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-bar-wrap {
+  width: 72px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mini-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.day-pct {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: var(--text-muted);
+  font-size: 9px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.day-card.open .chevron { transform: rotate(180deg); }
+
+/* DAY BODY */
+.day-body {
+  display: none;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  flex-direction: column;
+  gap: 14px;
+}
+.day-card.open .day-body { display: flex; }
+
+/* TASK ROW */
+.task-row { display: flex; flex-direction: column; gap: 8px; }
+
+.task-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.task-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.time-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.time-box input {
+  width: 50px;
+  padding: 3px 6px;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* CUSTOM CHECKBOX */
+.cbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  width: fit-content;
+}
+.cbox input[type=checkbox] { display: none; }
+
+.cbox-sq {
+  width: 15px; height: 15px;
+  border: 1px solid var(--text-muted);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.cbox input:checked + .cbox-sq {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cbox input:checked + .cbox-sq::after {
+  content: '✓';
+  color: #000;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+}
+.cbox-label {
+  font-size: 12px;
+  color: var(--text);
+  transition: color 0.15s;
+}
+.cbox input:checked ~ .cbox-label {
+  color: var(--text-dim);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+}
+
+/* INPUTS */
+input[type=text],input[type=number],textarea,select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 7px 10px;
+  width: 100%;
+  transition: border-color 0.15s;
+  outline: none;
+  resize: vertical;
+}
+input[type=text]:focus,input[type=number]:focus,
+textarea:focus,select:focus {
+  border-color: rgba(31,212,160,0.35);
+  background: var(--surface3);
+}
+textarea { min-height: 56px; max-height: 100px; }
+input[type=number] { width: 64px; }
+select { cursor: pointer; }
+
+/* SELECT+CHECKBOX INLINE */
+.inline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.inline-row select { width: auto; padding: 4px 8px; font-size: 11px; }
+
+/* TOGGLES */
+.toggle-grp { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.toggle-btn {
+  padding: 5px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.toggle-btn:hover { border-color: var(--border-bright); color: var(--text-dim); }
+.toggle-btn.t-yes { background: var(--green-dim); border-color: rgba(34,197,94,0.35); color: var(--green); }
+.toggle-btn.t-no  { background: var(--red-dim);   border-color: rgba(244,80,94,0.25);  color: var(--red); }
+.toggle-btn.t-null { opacity: 0.5; }
+
+/* TOPIC CHIPS */
+.chips-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.chip {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 10.5px;
+  color: var(--text-dim);
+  background: transparent;
+  font-family: var(--mono);
+  transition: all 0.15s;
+  user-select: none;
+}
+.chip:hover { border-color: var(--border-bright); color: var(--text); }
+.chip.on { background: var(--accent-dim); border-color: rgba(31,212,160,0.3); color: var(--accent); }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); }
+
+/* LOGIC ROW */
+.logic-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logic-row span { color: var(--text-dim); font-size: 12px; }
+
+/* ═══ FEEDBACK SECTION ═══ */
+.feedback-section { margin-bottom: 32px; }
+
+.feedback-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+@media(max-width:520px){ .form-grid{grid-template-columns:1fr} }
+
+.fg { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.fg-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.fg textarea { min-height: 52px; }
+
+.btn-add {
+  background: var(--accent-dim);
+  border: 1px solid rgba(31,212,160,0.25);
+  color: var(--accent);
+  padding: 8px 20px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+.btn-add:hover { background: var(--accent-glow); border-color: rgba(31,212,160,0.4); }
+
+/* FEEDBACK CARDS */
+.fb-cards { display: flex; flex-direction: column; gap: 8px; }
+
+.fb-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.fb-card:hover { border-color: var(--border-bright); }
+
+.fb-head {
+  display: flex;
+  align-items: center;
+  padding: 11px 14px;
+  cursor: pointer;
+  gap: 9px;
+  user-select: none;
+  transition: background 0.15s;
+}
+.fb-head:hover { background: var(--surface2); }
+
+.round-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.rb-hr   { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.rb-tech { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(31,212,160,0.2); }
+.rb-other{ background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+.fb-company { font-weight: 600; font-size: 12.5px; flex: 1; }
+.fb-date { color: var(--text-muted); font-size: 10px; flex-shrink: 0; }
+
+.fb-del {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.fb-del:hover { color: var(--red); }
+
+.fb-body {
+  display: none;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  flex-direction: column;
+  gap: 10px;
+}
+.fb-card.open .fb-body { display: flex; }
+
+.fb-field { display: flex; flex-direction: column; gap: 3px; }
+.fb-flabel {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.fb-fval {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+.fb-fval.danger { color: var(--red); }
+.fb-fval.warn   { color: var(--amber); }
+
+/* ═══ WEAK AREAS ═══ */
+.weak-panel {
+  background: var(--surface);
+  border: 1px solid rgba(244,80,94,0.15);
+  border-left: 3px solid var(--red);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  margin-bottom: 32px;
+}
+.weak-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.weak-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.weak-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--red-dim);
+  border: 1px solid rgba(244,80,94,0.18);
+  border-radius: 2px;
+  color: var(--red);
+  font-size: 11px;
+}
+
+/* ═══ COLOR UTILS ═══ */
+.c-accent { color: var(--accent); }
+.c-amber  { color: var(--amber); }
+.c-red    { color: var(--red); }
+.c-green  { color: var(--green); }
+.c-dim    { color: var(--text-dim); }
+.c-muted  { color: var(--text-muted); }
+
+.bg-accent { background: linear-gradient(90deg, var(--accent), #4ade80); }
+.bg-amber  { background: var(--amber); }
+.bg-red    { background: var(--red); }
+
+/* EMPTY STATE */
+.empty-state {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-style: italic;
+  padding: 2px 0;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  padding-top: 20px;
+}
+
+/* RESPONSIVE */
+@media(max-width:560px){
+  .mini-bar-wrap { display: none; }
+  .header-actions { gap: 6px; }
+  .day-theme { display: none; }
+  .day-num { min-width: 40px; }
+}
+
+/* SCROLL BAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════════════════════════════════════ HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="title-tag">⬡ Execution Mode</div>
+      <h1>5-Day Interview Prep</h1>
+    </div>
+    <div class="header-actions">
+      <div class="streak-badge" id="streakBadge">🔥 0 day streak</div>
+      <button class="btn-reset" onclick="confirmReset()">↺ Reset All</button>
+    </div>
+  </div>
+
+  <div class="overall-progress">
+    <div class="progress-row">
+      <span class="progress-label">Overall Completion</span>
+      <div class="progress-stats">
+        <span class="overall-pct" id="overallPct">0%</span>
+        <span class="progress-sub" id="overallSub">0 / 25 tasks</span>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="overallFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="quote-bar" id="quoteLine"></div>
+</div>
+
+<!-- ═══════════════════════════════════════ TODAY'S FOCUS -->
+<div class="section-header">
+  <span class="section-header-text">Today's Mission</span>
+  <div class="section-line"></div>
+</div>
+
+<div class="focus-panel" id="focusPanel">
+  <div class="focus-title">
+    ⚡ Focus
+    <span class="focus-day-tag" id="focusDayTag">Day 1</span>
+  </div>
+  <div class="focus-items" id="focusItems"></div>
+</div>
+
+<!-- ═══════════════════════════════════════ DAY TRACKER -->
+<div class="section-header">
+  <span class="section-header-text">Daily Tracker</span>
+  <div class="section-line"></div>
+</div>
+
+<div class="days-grid" id="daysGrid"></div>
+
+<!-- ═══════════════════════════════════════ FEEDBACK -->
+<div class="section-header">
+  <span class="section-header-text">Interview Feedback Log</span>
+  <div class="section-line"></div>
+</div>
+
+<div class="feedback-section">
+  <div class="feedback-form">
+    <div class="form-grid">
+      <div class="fg">
+        <div class="fg-label">Company</div>
+        <input type="text" id="fb_company" placeholder="e.g. Razorpay, Darwinbox...">
+      </div>
+      <div class="fg">
+        <div class="fg-label">Round Type</div>
+        <select id="fb_round">
+          <option value="HR">HR Round</option>
+          <option value="Tech">Tech Round</option>
+          <option value="Assignment">Assignment</option>
+          <option value="Final">Final Round</option>
+          <option value="System">System Design</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="fg-label">Questions Asked</div>
+      <textarea id="fb_questions" placeholder="What did they ask?"></textarea>
+    </div>
+    <div class="fg">
+      <div class="fg-label">Where I Struggled / Failed</div>
+      <textarea id="fb_failures" placeholder="Where things broke down..."></textarea>
+    </div>
+    <div class="fg">
+      <div class="fg-label">What to Improve</div>
+      <textarea id="fb_improve" placeholder="Concrete action items for next time..."></textarea>
+    </div>
+    <button class="btn-add" onclick="addFeedback()">+ Log Feedback Entry</button>
+  </div>
+  <div class="fb-cards" id="fbCards"></div>
+</div>
+
+<!-- ═══════════════════════════════════════ WEAK AREAS -->
+<div class="section-header">
+  <span class="section-header-text">Weak Areas Radar</span>
+  <div class="section-line"></div>
+</div>
+
+<div class="weak-panel">
+  <div class="weak-title">⚠ Identified Weak Areas</div>
+  <div class="weak-tags" id="weakTags"></div>
+</div>
+
+<div class="footer">mrkgp · Interview Prep Tracker · All data stored locally in your browser</div>
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════════════
+const TOPICS = [
+  'React Hooks','useState/useRef','useEffect','useMemo/useCallback',
+  'State (Zustand)','React Query','Context API',
+  'Next.js Routing','App Router','Server Components','SSR/SSG',
+  'TypeScript','API Design','Auth (JWT)','Auth (Sessions)',
+  'Performance Opt','Code Splitting','Web Vitals',
+  'Razorpay/Stripe','Testing','CSS/Tailwind'
+];
+
+const DAY_THEMES = [
+  'HR Practice + React Foundations',
+  'ProCoach Deep Dive + State Management',
+  'KhetiValah + Next.js + Auth',
+  'Performance + Applications + Mock',
+  'Review + Final Applications + Mock'
+];
+
+const QUOTES = [
+  '"Execution beats planning. Every single time."',
+  '"The interview is already happening. Be ready or get ready."',
+  '"Every rejected application is data, not a verdict."',
+  '"Know your projects cold. They are your biggest advantage."',
+  '"Clear thinking under pressure is the only thing they\'re hiring."',
+  '"One problem solved today = one more confidence unit tomorrow."',
+  '"Ship clarity, not just code. Articulate your thinking."',
+];
+
+const KEY = 'iprep_v3';
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+function defaultDay(d) {
+  const suggested = [
+    ['ProCoach','ProCoach'],
+    ['KhetiValah','ProCoach'],
+    ['Both','KhetiValah'],
+    ['ProCoach','Both'],
+    ['Both','Both'],
+  ];
+  return {
+    hrDone: false, hrNotes: '', hrTime: '',
+    projDone: false, projWhich: suggested[d-1]?.[0] || 'ProCoach', projNotes: '', projTime: '',
+    techTopics: [], techTime: '',
+    logicCount: '', logicTime: '',
+    mockDone: null,
+    dayNotes: '',
+    isOpen: d === 1
+  };
+}
+
+function defaultState() {
+  const s = { days: {}, feedback: [] };
+  for (let d = 1; d <= 5; d++) s.days[d] = defaultDay(d);
+  return s;
+}
+
+let S = (function() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    const s = defaultState();
+    if (parsed.feedback) s.feedback = parsed.feedback;
+    for (let d = 1; d <= 5; d++) {
+      if (parsed.days?.[d]) s.days[d] = { ...defaultDay(d), ...parsed.days[d] };
+    }
+    return s;
+  } catch(e) { return defaultState(); }
+})();
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(S));
+}
+
+function confirmReset() {
+  if (confirm('⚠ Reset ALL tracker data? This cannot be undone.')) {
+    localStorage.removeItem(KEY);
+    S = defaultState();
+    save();
+    renderAll();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PROGRESS
+// ═══════════════════════════════════════════════════════════
+function dayPct(d) {
+  const day = S.days[d];
+  let done = 0;
+  if (day.hrDone)  done++;
+  if (day.projDone) done++;
+  if (day.techTopics.length >= 2) done++;
+  if (day.logicCount && parseInt(day.logicCount) > 0) done++;
+  if (day.mockDone === true) done++;
+  return Math.round((done / 5) * 100);
+}
+
+function overallPct() {
+  let t = 0;
+  for (let d = 1; d <= 5; d++) t += dayPct(d);
+  return Math.round(t / 5);
+}
+
+function totalDone() {
+  let done = 0;
+  for (let d = 1; d <= 5; d++) {
+    const day = S.days[d];
+    if (day.hrDone) done++;
+    if (day.projDone) done++;
+    if (day.techTopics.length >= 2) done++;
+    if (day.logicCount && parseInt(day.logicCount) > 0) done++;
+    if (day.mockDone === true) done++;
+  }
+  return done;
+}
+
+function streak() {
+  let s = 0;
+  for (let d = 1; d <= 5; d++) {
+    if (dayPct(d) >= 60) s++;
+    else break;
+  }
+  return s;
+}
+
+function pctColor(p) {
+  if (p >= 80) return 'c-green';
+  if (p >= 40) return 'c-amber';
+  return 'c-red';
+}
+
+function barBg(p) {
+  if (p >= 80) return 'bg-accent';
+  if (p >= 40) return 'bg-amber';
+  return 'bg-red';
+}
+
+function currentDay() {
+  for (let d = 1; d <= 5; d++) if (dayPct(d) < 100) return d;
+  return 5;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+function renderAll() {
+  renderHeader();
+  renderFocus();
+  renderDays();
+  renderFeedback();
+  renderWeak();
+}
+
+function renderHeader() {
+  const p = overallPct();
+  const done = totalDone();
+  document.getElementById('overallPct').textContent = p + '%';
+  document.getElementById('overallSub').textContent = `${done} / 25 tasks`;
+  document.getElementById('overallFill').style.width = p + '%';
+  const s = streak();
+  document.getElementById('streakBadge').textContent = `🔥 ${s} day streak`;
+  const qi = new Date().getDay() % QUOTES.length;
+  document.getElementById('quoteLine').textContent = QUOTES[qi];
+}
+
+function renderFocus() {
+  const d = currentDay();
+  document.getElementById('focusDayTag').textContent = 'Day ' + d;
+  const day = S.days[d];
+  const items = [];
+
+  if (!day.hrDone)  items.push('Complete HR practice + self-intro rehearsal');
+  if (!day.projDone) items.push(`Deep dive into ${day.projWhich} — architecture & decisions`);
+  if (day.techTopics.length < 2) items.push('Revise at least 2–3 tech topics thoroughly');
+  if (!day.logicCount || parseInt(day.logicCount) < 1) items.push('Solve logic / DSA problems');
+  if (day.mockDone === null) items.push('Attempt a mock or real interview session');
+
+  const top3 = items.slice(0, 3);
+  const container = document.getElementById('focusItems');
+
+  if (top3.length === 0) {
+    container.innerHTML = `<div class="focus-item c-accent">✓ All focus tasks done for today. Excellent work.</div>`;
+    return;
+  }
+
+  container.innerHTML = top3.map((txt, i) => `
+    <div class="focus-item">
+      <span class="priority-tag">#${i+1}</span>
+      <span>${esc(txt)}</span>
+    </div>`).join('');
+}
+
+function renderDays() {
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+  const cd = currentDay();
+
+  for (let d = 1; d <= 5; d++) {
+    const day = S.days[d];
+    const p = dayPct(d);
+    const isActive = d === cd;
+    const isDone = p === 100;
+
+    const card = document.createElement('div');
+    card.id = `dc${d}`;
+    card.className = `day-card${day.isOpen ? ' open' : ''}${isActive ? ' is-active' : ''}${isDone ? ' is-done' : ''}`;
+
+    // --- TOPIC CHIPS ---
+    const chipsHtml = TOPICS.map(t => `
+      <span class="chip${day.techTopics.includes(t) ? ' on' : ''}"
+        onclick="toggleTopic(${d},'${esc(t)}')">${esc(t)}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="day-header" onclick="toggleDay(${d})">
+        ${isActive ? '<div class="pulse"></div>' : ''}
+        <span class="day-num">Day ${d}</span>
+        <span class="day-theme">${esc(DAY_THEMES[d-1])}</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar ${barBg(p)}" id="mb${d}" style="width:${p}%"></div>
+        </div>
+        <span class="day-pct ${pctColor(p)}" id="dpct${d}">${p}%</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="day-body">
+
+        <!-- HR PRACTICE -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">HR Practice</span>
+            <div class="time-box">
+              <input type="number" min="0" max="300" placeholder="0" value="${esc(day.hrTime)}"
+                onchange="upd(${d},'hrTime',this.value)">
+              <span>min</span>
+            </div>
+          </div>
+          <label class="cbox">
+            <input type="checkbox" ${day.hrDone ? 'checked' : ''}
+              onchange="chk(${d},'hrDone',this.checked)">
+            <div class="cbox-sq"></div>
+            <span class="cbox-label">Practiced self-intro, project storytelling & HR questions</span>
+          </label>
+          <textarea placeholder="Notes: what you covered, phrases to improve..."
+            onchange="upd(${d},'hrNotes',this.value)">${esc(day.hrNotes)}</textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PROJECT STUDY -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">Project Study</span>
+            <div class="time-box">
+              <input type="number" min="0" max="300" placeholder="0" value="${esc(day.projTime)}"
+                onchange="upd(${d},'projTime',this.value)">
+              <span>min</span>
+            </div>
+          </div>
+          <div class="inline-row">
+            <label class="cbox">
+              <input type="checkbox" ${day.projDone ? 'checked' : ''}
+                onchange="chk(${d},'projDone',this.checked)">
+              <div class="cbox-sq"></div>
+              <span class="cbox-label">Deep-dived into</span>
+            </label>
+            <select onchange="upd(${d},'projWhich',this.value)">
+              <option value="ProCoach"  ${day.projWhich==='ProCoach'  ? 'selected':''}>ProCoach</option>
+              <option value="KhetiValah"${day.projWhich==='KhetiValah'? 'selected':''}>KhetiValah</option>
+              <option value="Both"      ${day.projWhich==='Both'      ? 'selected':''}>Both</option>
+            </select>
+          </div>
+          <textarea placeholder="What I covered: architecture, data flows, APIs, challenges..."
+            onchange="upd(${d},'projNotes',this.value)">${esc(day.projNotes)}</textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- TECH REVISION -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">Tech Revision <span class="c-muted">(select topics revised)</span></span>
+            <div class="time-box">
+              <input type="number" min="0" max="300" placeholder="0" value="${esc(day.techTime)}"
+                onchange="upd(${d},'techTime',this.value)">
+              <span>min</span>
+            </div>
+          </div>
+          <div class="chips-wrap" id="chips${d}">${chipsHtml}</div>
+          ${day.techTopics.length > 0
+            ? `<div class="c-dim" style="font-size:10.5px">✓ Covered: ${day.techTopics.join(', ')}</div>`
+            : ''}
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- LOGIC / DSA -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">Logic / DSA Practice</span>
+            <div class="time-box">
+              <input type="number" min="0" max="300" placeholder="0" value="${esc(day.logicTime)}"
+                onchange="upd(${d},'logicTime',this.value)">
+              <span>min</span>
+            </div>
+          </div>
+          <div class="logic-row">
+            <input type="number" min="0" max="50" placeholder="0" value="${esc(day.logicCount)}"
+              onchange="upd(${d},'logicCount',this.value); refreshDayProgress(${d})">
+            <span>problems solved today</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- MOCK INTERVIEW -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">Mock / Real Interview Done?</span>
+          </div>
+          <div class="toggle-grp">
+            <button class="toggle-btn${day.mockDone===true ? ' t-yes' : ''}"
+              onclick="setMock(${d}, true)">✓ Done</button>
+            <button class="toggle-btn${day.mockDone===false ? ' t-no' : ''}"
+              onclick="setMock(${d}, false)">✗ Skipped</button>
+            <button class="toggle-btn${day.mockDone===null ? ' t-null' : ''}"
+              onclick="setMock(${d}, null)">— Not yet</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- DAY NOTES -->
+        <div class="task-row">
+          <div class="task-head">
+            <span class="task-label">Day Notes</span>
+          </div>
+          <textarea placeholder="Key learnings, blockers, things to revisit tomorrow..."
+            onchange="upd(${d},'dayNotes',this.value)">${esc(day.dayNotes)}</textarea>
+        </div>
+
+      </div>`;
+
+    grid.appendChild(card);
+  }
+}
+
+function renderFeedback() {
+  const c = document.getElementById('fbCards');
+  c.innerHTML = '';
+  if (S.feedback.length === 0) {
+    c.innerHTML = '<div class="empty-state">No feedback logged yet. Log your first interview above.</div>';
+    return;
+  }
+  S.feedback.forEach((fb, i) => {
+    const badgeCls = fb.round === 'HR' ? 'rb-hr' : fb.round === 'Tech' ? 'rb-tech' : 'rb-other';
+    const card = document.createElement('div');
+    card.className = 'fb-card';
+    card.id = `fbc${i}`;
+    card.innerHTML = `
+      <div class="fb-head" onclick="toggleFb(${i})">
+        <span class="round-badge ${badgeCls}">${esc(fb.round)}</span>
+        <span class="fb-company">${esc(fb.company || 'Unknown Company')}</span>
+        <span class="fb-date">${esc(fb.date || '')}</span>
+        <button class="fb-del" onclick="event.stopPropagation();delFb(${i})">✕</button>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="fb-body">
+        ${fb.questions ? `<div class="fb-field">
+          <div class="fb-flabel">Questions Asked</div>
+          <div class="fb-fval">${esc(fb.questions)}</div>
+        </div>` : ''}
+        ${fb.failures ? `<div class="fb-field">
+          <div class="fb-flabel" style="color:var(--red)">Where I Struggled</div>
+          <div class="fb-fval danger">${esc(fb.failures)}</div>
+        </div>` : ''}
+        ${fb.improve ? `<div class="fb-field">
+          <div class="fb-flabel" style="color:var(--amber)">What to Improve</div>
+          <div class="fb-fval warn">${esc(fb.improve)}</div>
+        </div>` : ''}
+      </div>`;
+    c.appendChild(card);
+  });
+}
+
+function renderWeak() {
+  const c = document.getElementById('weakTags');
+  const texts = S.feedback.filter(fb => fb.failures?.trim()).map(fb => fb.failures.trim());
+  if (!texts.length) {
+    c.innerHTML = '<span class="empty-state">No weak areas yet. They\'ll surface automatically from feedback.</span>';
+    return;
+  }
+  const tags = [];
+  texts.forEach(t => {
+    t.split(/[.\n]+/).map(s => s.trim()).filter(s => s.length > 5).forEach(s => tags.push(s));
+  });
+  c.innerHTML = [...new Set(tags)].slice(0, 14)
+    .map(t => `<span class="weak-tag">${esc(t)}</span>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+function toggleDay(d) {
+  S.days[d].isOpen = !S.days[d].isOpen;
+  save();
+  document.getElementById(`dc${d}`).classList.toggle('open');
+}
+
+function chk(d, field, val) {
+  S.days[d][field] = val;
+  save();
+  refreshDayProgress(d);
+  renderHeader();
+  renderFocus();
+}
+
+function upd(d, field, val) {
+  S.days[d][field] = val;
+  save();
+}
+
+function toggleTopic(d, topic) {
+  const arr = S.days[d].techTopics;
+  const idx = arr.indexOf(topic);
+  if (idx === -1) arr.push(topic); else arr.splice(idx, 1);
+  save();
+  // Update chips
+  const wrap = document.getElementById(`chips${d}`);
+  wrap.querySelectorAll('.chip').forEach(ch => {
+    ch.classList.toggle('on', arr.includes(ch.textContent.trim()));
+  });
+  // Update covered line
+  const body = document.getElementById(`dc${d}`).querySelector('.day-body');
+  let covEl = body.querySelector('.covered-line');
+  if (!covEl) {
+    covEl = document.createElement('div');
+    covEl.className = 'covered-line c-dim';
+    covEl.style.fontSize = '10.5px';
+    wrap.after(covEl);
+  }
+  covEl.textContent = arr.length > 0 ? `✓ Covered: ${arr.join(', ')}` : '';
+
+  refreshDayProgress(d);
+  renderHeader();
+  renderFocus();
+}
+
+function setMock(d, val) {
+  S.days[d].mockDone = val;
+  save();
+  const btns = document.getElementById(`dc${d}`).querySelectorAll('.toggle-btn');
+  btns.forEach((btn, i) => {
+    btn.classList.remove('t-yes','t-no','t-null');
+    if (i === 0 && val === true)  btn.classList.add('t-yes');
+    if (i === 1 && val === false) btn.classList.add('t-no');
+    if (i === 2 && val === null)  btn.classList.add('t-null');
+  });
+  refreshDayProgress(d);
+  renderHeader();
+  renderFocus();
+}
+
+function refreshDayProgress(d) {
+  const p = dayPct(d);
+  const mb = document.getElementById(`mb${d}`);
+  const dp = document.getElementById(`dpct${d}`);
+  const card = document.getElementById(`dc${d}`);
+
+  if (mb) { mb.style.width = p + '%'; mb.className = `mini-bar ${barBg(p)}`; }
+  if (dp) { dp.textContent = p + '%'; dp.className = `day-pct ${pctColor(p)}`; }
+  if (card) {
+    card.classList.toggle('is-done', p === 100);
+  }
+}
+
+function addFeedback() {
+  const company  = document.getElementById('fb_company').value.trim();
+  const round    = document.getElementById('fb_round').value;
+  const questions= document.getElementById('fb_questions').value.trim();
+  const failures = document.getElementById('fb_failures').value.trim();
+  const improve  = document.getElementById('fb_improve').value.trim();
+
+  if (!company && !questions && !failures) {
+    alert('Please fill in at least the company name or some details.');
+    return;
+  }
+
+  S.feedback.unshift({
+    company, round, questions, failures, improve,
+    date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short' }),
+    id: Date.now()
+  });
+  save();
+
+  ['fb_company','fb_questions','fb_failures','fb_improve'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+
+  renderFeedback();
+  renderWeak();
+}
+
+function delFb(i) {
+  if (confirm('Delete this feedback entry?')) {
+    S.feedback.splice(i, 1);
+    save();
+    renderFeedback();
+    renderWeak();
+  }
+}
+
+function toggleFb(i) {
+  const card = document.getElementById(`fbc${i}`);
+  if (card) {
+    card.classList.toggle('open');
+    const body = card.querySelector('.fb-body');
+    if (body) body.style.display = card.classList.contains('open') ? 'flex' : 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════
+function esc(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+renderAll();
+</script>
+</body>
+</html>
